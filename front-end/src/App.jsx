@@ -1,8 +1,8 @@
 import "./App.css";
-import Recover from "./pages/Recover/Recover";
+import AppRouter from "./Router/AppRouter";
 
 function App() {
-  return <Recover />;
+  return <AppRouter />;
 }
 
 export default App;
