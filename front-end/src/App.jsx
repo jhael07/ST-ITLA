@@ -1,8 +1,8 @@
 import "./App.css";
-import Login from "./pages/Login/Login";
+import Recover from "./pages/Recover/Recover";
 
 function App() {
-  return <Login />;
+  return <Recover />;
 }
 
 export default App;
