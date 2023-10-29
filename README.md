@@ -15,7 +15,7 @@ El Sistema de Transporte Avanzado para ITLA es una aplicación innovadora diseñ
 ## Tecnologías Utilizadas
 
 - **Frontend:** HTML, CSS, JavaScript, React.js
-- **Backend:** Node.js, Express.js, MongoDB
+- **Backend:** Node.js, Express.js, Mysql
 - **Tecnología de Rastreo:** GPS, APIs de Mapas en Tiempo Real
 - **Métodos de Pago:** Integración con Pasarelas de Pago Seguras
 
