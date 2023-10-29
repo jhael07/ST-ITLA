@@ -14,11 +14,8 @@ const Login = () => {
         <form action="#" method="POST" className="z-40">
           {/* 👇 Estos son los inputs de usuario y contraseña */}
           <InputsLogin {...inputs} />
-          {/* 👇 checkbox de recuerdame */}
           <RemeberMe />
-          {/* 👇 boton de reinicio de contraseña */}
           <ForgotPassword />
-          {/* 👇 boton de inicio de sesión */}
           <LoginButton />
         </form>
       </div>
