@@ -2,9 +2,12 @@
 import {  CampusBanner, InputsLogin, RemeberMe, ForgotPassword, LoginButton, } from "./components";
 import { useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
-import "./index.css";
 import { useEffect, useState } from "react";
 import { login } from "../../api/methods";
+import "./index.css";
+
+import secureLocalStorage from "react-secure-storage";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { register, handleSubmit } = useForm();
@@ -48,56 +51,65 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    if (errorMessage)
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 3000);
+    if (errorMessage) setTimeout(() => setErrorMessage(null), 3000);
   }, [errorMessage?.length > 0]);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!secureLocalStorage.getItem("token")) navigate("/");
+    else navigate("/home");
+  }, [secureLocalStorage.getItem("token")]);
+
   return (
-    <div class="bg-slate-50 flex justify-center items-center min-h-screen ">
-      {/* 👇 Este es el banner del itla con la frase */}
-      <CampusBanner />
-      <div class="lg:p-36 md:p-52 sm:20 p-8 pt-32 w-full lg:w-1/2 h-screen  ">
-        <div
-          className={`absolute z-40 top-10 right-12 w-fit transition-all ${
-            errorMessage
-              ? "translate-x-[-10px] opacity-1"
-              : " opacity-0 translate-x-6"
-          }`}
-        >
+    <>
+      <div class="bg-slate-50 flex justify-center items-center min-h-screen ">
+        {/* 👇 Este es el banner del itla con la frase */}
+        <CampusBanner />
+        <div class="lg:p-36 md:p-52 sm:20 p-8 pt-32 w-full lg:w-1/2 h-screen  ">
           <div
-            class="bg-red-100 border border-red-400 mx-auto w-fit min-w-[21.5rem] flex items-center gap-3 text-red-600 px-4 py-3 rounded relative border-l-8 border-l-red-500"
-            role="alert"
+            className={`absolute z-40 top-10 right-12 w-fit transition-all ${
+              errorMessage
+                ? "translate-x-[-10px] opacity-1"
+                : " opacity-0 translate-x-6"
+            }`}
           >
-            <span class="block sm:inline font-medium ">{errorMessage}</span>
-            <AiOutlineClose
-              className="hover:cursor-pointer absolute right-3"
-              onClick={() => setErrorMessage(null)}
-            />
+            <div
+              class="bg-red-100 border border-red-400 mx-auto w-fit min-w-[21.5rem] flex items-center gap-3 text-red-600 px-4 py-3 rounded relative border-l-8 border-l-red-500"
+              role="alert"
+            >
+              <span class="block sm:inline font-medium ">{errorMessage}</span>
+              <AiOutlineClose
+                className="hover:cursor-pointer absolute right-3"
+                onClick={() => setErrorMessage(null)}
+              />
+            </div>
           </div>
+          <h1 class="text-2xl font-semibold mb-4">Login</h1>
+          {/* --- FORMULARIO ---  */}
+          <form
+            onSubmit={handleSubmit(
+              async ({ email, password }) => {
+                const loggedSucessfull = await login({ email, password });
+                if (loggedSucessfull) {
+                  navigate("/home");
+                }
+              },
+              (err) => {
+                const message = err[Object.keys(err)[0]]?.message;
+                setErrorMessage(message);
+              }
+            )}
+          >
+            {/* 👇 Estos son los inputs de usuario y contraseña */}
+            <InputsLogin {...inputs} />
+            <RemeberMe />
+            <ForgotPassword />
+            <LoginButton />
+          </form>
         </div>
-        <h1 class="text-2xl font-semibold mb-4">Login</h1>
-        {/* --- FORMULARIO ---  */}
-        <form
-          onSubmit={handleSubmit(
-            ({ email, password }) => {
-              login({ email, password });
-            },
-            (err) => {
-              const message = err[Object.keys(err)[0]]?.message;
-              setErrorMessage(message);
-            }
-          )}
-        >
-          {/* 👇 Estos son los inputs de usuario y contraseña */}
-          <InputsLogin {...inputs} />
-          <RemeberMe />
-          <ForgotPassword />
-          <LoginButton />
-        </form>
       </div>
-    </div>
+    </>
   );
 };
 
